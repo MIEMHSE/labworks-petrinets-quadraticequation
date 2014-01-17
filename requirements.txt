@@ -1,0 +1,2 @@
+https://python-snakes.googlecode.com/files/snakes-0.9.17-1.tar.gz
+
