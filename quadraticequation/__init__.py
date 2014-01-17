@@ -86,9 +86,9 @@ def quadratic_equation_factory(**kwargs):
     transition_numerator2 = Transition('-b - sqrt discriminant transition')
     n.add_transition(transition_numerator2)
     n.add_input('b concurrent 3 minus', '-b - sqrt discriminant transition', Variable('b'))
-    n.add_input('sqrt discriminant concurrent minus', '-b - sqrt discriminant transition', Variable('sdp'))
+    n.add_input('sqrt discriminant concurrent minus', '-b - sqrt discriminant transition', Variable('sdm'))
     n.add_place(Place('numerator minus'))
-    n.add_output('numerator minus', '-b - sqrt discriminant transition', Expression('b + sdp'))
+    n.add_output('numerator minus', '-b - sqrt discriminant transition', Expression('b + sdm'))
 
     transition_x1 = Transition('x1 transition')
     n.add_transition(transition_x1)
@@ -117,10 +117,17 @@ def quadratic_equation_factory(**kwargs):
                transition_x2]
 
 if __name__ == '__main__':
-    net, transitions = quadratic_equation_factory(a=[1], b=[2], c=[1])
+    model_data = {
+        'a': [1, 2],
+        'b': [2, 3],
+        'c': [1, 4]
+    }
+    steps = max(map(len, model_data.values()))
+    net, transitions = quadratic_equation_factory(**model_data)
     net.draw('value-0.png')
-    for trans in transitions:
-        modes = trans.modes()
-        if len(modes) > 0:
-            trans.fire(modes[0])
-    net.draw('value-1.png')
+    for step in range(0, steps):
+        for trans in transitions:
+            modes = trans.modes()
+            if len(modes) > 0:
+                trans.fire(modes[0])
+        net.draw('value-%s.png' % (step + 1))
